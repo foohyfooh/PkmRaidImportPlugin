@@ -7,7 +7,7 @@ The purpose of this [PKHeX](https://github.com/kwsch/PKHeX) plugin is to provide
 - Unblock the *RaidImportPlugin.dll* in Windows' Properties Menu.
 - Put *RaidImportPlugin.dll* in the *plugins* folder that is in the same directory as the PKHeX binary.
 - *Import Raid* should now be in the *Tools* menu of PKHeX.
-- Once you click the button a folder select dialog while pop up.
+- Once you click the button a folder select dialog will pop up.
 - Select an appropriate raid folder from the Event Gallery for the game and it should be imported.
   - For Sword/Shield, this is the folder with the blocks
   - For Scarlet/Violet, this is the folder with the Identifier.txt
