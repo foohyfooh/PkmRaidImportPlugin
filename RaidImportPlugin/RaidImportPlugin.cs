@@ -28,35 +28,23 @@ namespace RaidImportPlugin {
       DialogResult dialogResult = dialog.ShowDialog();
       if (dialogResult == DialogResult.OK) {
         string raidPath = dialog.SelectedPath;
-        string RaidFilePath(string file) => $@"{raidPath}\{file}";
-        List<Tuple<uint, string>> blocks = null!;
-        if (SaveFileEditor.SAV is SAV8SWSH sav8swsh) {
-          blocks = new List<Tuple<uint, string>> () { 
-            new Tuple<uint, string>(SwShConstants.BonusRewardsLocation, RaidFilePath(SwShConstants.BonusRewardsStr)),
-            new Tuple<uint, string>(SwShConstants.DiaEncounterLocation, RaidFilePath(SwShConstants.DiaEncounterStr)),
-            new Tuple<uint, string>(SwShConstants.DropRewardsLocation, RaidFilePath(SwShConstants.DropRewardsStr)),
-            new Tuple<uint, string>(SwShConstants.NormalEncountLocation, RaidFilePath(SwShConstants.NormalEncountStr)),
-          };
-          if (sav8swsh.SaveRevision >= 1) blocks.Add(new Tuple<uint, string>(SwShConstants.NormalEncountRigel1Location, RaidFilePath(SwShConstants.NormalEncountRigel1Str)));
-          if (sav8swsh.SaveRevision >= 2) blocks.Add(new Tuple<uint, string>(SwShConstants.NormalEncountRigel2Location, RaidFilePath(SwShConstants.NormalEncountRigel2Str)));
+        IReadOnlyList<Block> blocks = null!;
+        if (SaveFileEditor.SAV is SAV8SWSH sav8SwSh) {
+               if (sav8SwSh.SaveRevision == 0) blocks = SwShConstants.BaseGameBlocks;
+          else if (sav8SwSh.SaveRevision == 1) blocks = SwShConstants.IsleOfArmorBlocks;
+          else if (sav8SwSh.SaveRevision == 2) blocks = SwShConstants.CrownTundraBlocks;
         } else if (SaveFileEditor.SAV is SAV9SV) {
           raidPath += @"\Files";
-          blocks = new List<Tuple<uint, string>> () {
-            new Tuple<uint, string>(SVConstants.EventRaidIdentifierLocation, RaidFilePath(SVConstants.EventRaidIdentifierStr)),
-            new Tuple<uint, string>(SVConstants.FixedRewardItemArrayLocation, RaidFilePath(SVConstants.FixedRewardItemArrayStr)),
-            new Tuple<uint, string>(SVConstants.LotteryRewardItemArrayLocation, RaidFilePath(SVConstants.LotteryRewardItemArrayStr)),
-            new Tuple<uint, string>(SVConstants.RaidEnemyArrayLocation, RaidFilePath(SVConstants.RaidEnemyArrayStr)),
-            new Tuple<uint, string>(SVConstants.RaidPriorityArrayLocation, RaidFilePath(SVConstants.RaidPriorityArrayStr))
-          };
+          blocks = SVConstants.BaseGameBlocks;
         }
         ImportRaid(raidPath, (dynamic)SaveFileEditor.SAV, blocks);
       }
     }
-
-    private static void ImportRaid<S>(string raidPath, S sav, List<Tuple<uint, string>> blocks) where S: SaveFile, ISCBlockArray, ISaveFileRevision {
-      if (blocks.All(b => File.Exists(b.Item2))) {
+    private static void ImportRaid<S>(string raidPath, S sav, IReadOnlyList<Block> blocks) where S: SaveFile, ISCBlockArray, ISaveFileRevision {
+      string RaidFilePath(string file) => $@"{raidPath}\{file}";
+      if (blocks.All(b => File.Exists(RaidFilePath(b.Path)))) {
         foreach ((uint blockLocation, string file) in blocks)
-          sav.Accessor.GetBlock(blockLocation).ChangeData(File.ReadAllBytes(file));
+          sav.Accessor.GetBlock(blockLocation).ChangeData(File.ReadAllBytes(RaidFilePath(file)));
         sav.State.Edited = true;
         MessageBox.Show("Raid Imported", "Raid Importer");
       } else {

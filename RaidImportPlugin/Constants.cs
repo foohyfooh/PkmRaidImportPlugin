@@ -1,36 +1,36 @@
 
 namespace RaidImportPlugin {
-  internal class SwShConstants {
-    // Block Location
-    public static readonly uint BonusRewardsLocation        = 0xEFCAE04E;
-    public static readonly uint DiaEncounterLocation        = 0xAD3920F5;
-    public static readonly uint DropRewardsLocation         = 0x680EEB85;
-    public static readonly uint NormalEncountLocation       = 0xAD9DFA6A;
-    public static readonly uint NormalEncountRigel1Location = 0x0E615A8C;
-    public static readonly uint NormalEncountRigel2Location = 0x11615F45;
 
-    // Block Filename
-    public static readonly string BonusRewardsStr        = "bonus_rewards";
-    public static readonly string DiaEncounterStr        = "dai_encount";
-    public static readonly string DropRewardsStr         = "drop_rewards";
-    public static readonly string NormalEncountStr       = "normal_encount";
-    public static readonly string NormalEncountRigel1Str = "normal_encount_rigel1";
-    public static readonly string NormalEncountRigel2Str = "normal_encount_rigel2";
+  internal record class Block(uint Location, string Path) {
+    public static implicit operator Block((uint, string) v) => new Block(v.Item1, v.Item2);
+  }
+
+  internal class SwShConstants {
+    // Base Game
+    public static readonly Block BonusRewards        = (0xEFCAE04E, "bonus_rewards");
+    public static readonly Block DiaEncounter        = (0xAD3920F5, "dai_encount");
+    public static readonly Block DropRewards         = (0x680EEB85, "drop_rewards");
+    public static readonly Block NormalEncount       = (0xAD9DFA6A, "normal_encount");
+    // Isle of Armor DLC
+    public static readonly Block NormalEncountRigel1 = (0x0E615A8C, "normal_encount_rigel1");
+    // Crown Tundra DLC
+    public static readonly Block NormalEncountRigel2 = (0x11615F45, "normal_encount_rigel2");
+
+    // Block Lists
+    public static readonly IReadOnlyList<Block> BaseGameBlocks    = new List<Block>() { BonusRewards, DiaEncounter, DropRewards, NormalEncount };
+    public static readonly IReadOnlyList<Block> IsleOfArmorBlocks = new List<Block>(BaseGameBlocks) { NormalEncountRigel1 };
+    public static readonly IReadOnlyList<Block> CrownTundraBlocks = new List<Block>(IsleOfArmorBlocks) { NormalEncountRigel2 };
   }
 
   internal class SVConstants {
-    // Block Location
-    public static readonly uint EventRaidIdentifierLocation    = 0x37B99B4D;
-    public static readonly uint FixedRewardItemArrayLocation   = 0x7D6C2B82;
-    public static readonly uint LotteryRewardItemArrayLocation = 0xA52B4811;
-    public static readonly uint RaidEnemyArrayLocation         = 0x0520A1B0;
-    public static readonly uint RaidPriorityArrayLocation      = 0x095451E4;
+    // Base Game
+    public static readonly Block EventRaidIdentifier    = (0x37B99B4D, "event_raid_identifier");
+    public static readonly Block FixedRewardItemArray   = (0x7D6C2B82, "fixed_reward_item_array");
+    public static readonly Block LotteryRewardItemArray = (0xA52B4811, "lottery_reward_item_array");
+    public static readonly Block RaidEnemyArray         = (0x0520A1B0, "raid_enemy_array");
+    public static readonly Block RaidPriorityArray      = (0x095451E4, "raid_priority_array");
 
-    // Block Filename
-    public static readonly string EventRaidIdentifierStr    = "event_raid_identifier";
-    public static readonly string FixedRewardItemArrayStr   = "fixed_reward_item_array";
-    public static readonly string LotteryRewardItemArrayStr = "lottery_reward_item_array";
-    public static readonly string RaidEnemyArrayStr         = "raid_enemy_array";
-    public static readonly string RaidPriorityArrayStr      = "raid_priority_array";
+    // Block Lists
+    public static readonly IReadOnlyList<Block> BaseGameBlocks = new List<Block>() { EventRaidIdentifier, FixedRewardItemArray, LotteryRewardItemArray, RaidEnemyArray, RaidPriorityArray };
   }
 }
