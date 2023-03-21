@@ -1,4 +1,4 @@
-# PKHeX Raid Importing Plugin
+# PKHeX Raid Importing Plugin (Archived; moved to [PKHeXPluginPile](https://github.com/foohyfooh/PKHeXPluginPile))
 
 The purpose of this [PKHeX](https://github.com/kwsch/PKHeX) plugin is to provide a convient way to import the raid data from [Project Pokémon Event Gallery](https://github.com/projectpokemon/EventsGallery) into Sword/Shield and Scarlet/Violet.
 
